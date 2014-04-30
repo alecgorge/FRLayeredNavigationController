@@ -69,19 +69,23 @@
 
             titleLabel.backgroundColor = [UIColor clearColor];
             titleLabel.text = titleText;
-            titleLabel.textAlignment = UITextAlignmentCenter;
+            titleLabel.textAlignment = NSTextAlignmentCenter;
 
 
-            titleLabel.font = titleTextAttrs[UITextAttributeFont];
+            titleLabel.font = titleTextAttrs[NSFontAttributeName];
 
-            titleLabel.textColor = titleTextAttrs[UITextAttributeTextColor];
+            titleLabel.textColor = titleTextAttrs[NSForegroundColorAttributeName];
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
             titleLabel.shadowColor = titleTextAttrs[UITextAttributeTextShadowColor];
 
             if (titleTextAttrs[UITextAttributeTextShadowOffset]){
                 titleLabel.shadowOffset = [titleTextAttrs[UITextAttributeTextShadowOffset] CGSizeValue];
             }
+#pragma clang diagnostic pop
 
+			
             self.titleView = titleLabel;
         } else {
             self.titleView = titleView;

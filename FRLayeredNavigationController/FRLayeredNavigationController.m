@@ -579,10 +579,23 @@ typedef enum {
 
 - (FRLayerController *)layerControllerOf:(UIViewController *)vc
 {
+    int i = 0;
     for (FRLayerController *lvc in self.layeredViewControllers) {
+        UIViewController *contentVc = lvc.contentViewController;
+        if([contentVc isKindOfClass:[UINavigationController class]]) {
+            UINavigationController *nav = (UINavigationController *)contentVc;
+            
+            for(UIViewController *subvc in nav.viewControllers) {
+                if(subvc == vc) {
+					return lvc;
+                }
+            }
+        }
         if (lvc.contentViewController == vc) {
             return lvc;
         }
+        
+        i++;
     }
     return nil;
 }
@@ -703,12 +716,27 @@ typedef enum {
     UIViewController *currentVc;
 
     while ((currentVc = [self.layeredViewControllers lastObject])) {
-        if (([currentVc class] == [FRLayerController class] &&
-             ((FRLayerController*)currentVc).contentViewController == vc) ||
-            ([currentVc class] != [FRLayerController class] &&
-             currentVc == vc)) {
-                break;
-            }
+		if([currentVc isKindOfClass:FRLayerController.class]) {
+			FRLayerController *lvc = (FRLayerController *)currentVc;
+			UIViewController *contentVc = lvc.contentViewController;
+			
+			if(contentVc == vc) {
+				return;
+			}
+			
+			if([contentVc isKindOfClass:UINavigationController.class]) {
+				UINavigationController *nav = (UINavigationController *)contentVc;
+				
+				for(UIViewController *subvc in nav.viewControllers) {
+					if(subvc == vc) {
+						return;
+					}
+				}
+			}
+		}
+		else if(currentVc == vc) {
+			return;
+		}
 
         if ([self.layeredViewControllers count] == 1) {
             /* don't remove root view controller */
@@ -833,6 +861,11 @@ typedef enum {
     void (^newFrameMoveCompleted)(BOOL) = ^(__unused BOOL finished) {
         [newVC didMoveToParentViewController:self];
     };
+	
+	if([self.delegate respondsToSelector:@selector(layeredNavigationController:didPushViewController:)]) {
+		[self.delegate layeredNavigationController:self
+							 didPushViewController:contentViewController];
+	}
 
     if (animated) {
         [UIView animateWithDuration:0.5

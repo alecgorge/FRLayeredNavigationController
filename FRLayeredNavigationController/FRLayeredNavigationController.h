@@ -71,6 +71,9 @@
 - (void)layeredNavigationController:(FRLayeredNavigationController*)layeredController
                   didMoveController:(UIViewController*)controller;
 
+- (void)layeredNavigationController:(FRLayeredNavigationController *)layeredController
+			  didPushViewController:(UIViewController *)controller;
+
 @end
 
 typedef enum {

@@ -34,6 +34,8 @@ static FRNavigationBar *_appearance = nil;
 
 @implementation FRNavigationBar
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 + (NSDictionary *)defaultTextAttributesIO6AndOlder
 {
     return @{UITextAttributeFont: [UIFont boldSystemFontOfSize:20.5],
@@ -43,11 +45,12 @@ static FRNavigationBar *_appearance = nil;
                                                        blue:126.0f/255.0f
                                                       alpha:1.0f]};
 }
+#pragma clang diagnostic pop
 
 + (NSDictionary *)defaultTextAttributesIO7AndNewer
 {
-    return @{UITextAttributeFont: [UIFont boldSystemFontOfSize:18],
-             UITextAttributeTextColor:[UIColor blackColor]};
+    return @{NSFontAttributeName: [UIFont boldSystemFontOfSize:18],
+             NSForegroundColorAttributeName:[UIColor blackColor]};
 }
 
 + (NSDictionary *)defaultTextAttributes
